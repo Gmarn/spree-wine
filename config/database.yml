@@ -5,21 +5,27 @@
 #   gem 'sqlite3'
 #
 default: &default
-  adapter: sqlite3
+  adapter: postgresql
+  encoding: unicode
+  database: enjoy-vue_development
+  # For details on connection pooling, see rails configuration guide
+  # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+  username: <%= ENV.fetch('DB_USERNAME', 'spree-wine') %>
+  password: <%= ENV.fetch('DB_PASSWORD', 'spree-wine') %>
+  host: <%= ENV.fetch('DB_1_PORT_5432_TCP_ADDR', 'localhost') %>
+  port: <%= ENV.fetch('DB_1_PORT_5432_TCP_PORT', '5432') %>
+
 
 development:
   <<: *default
-  database: db/development.sqlite3
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
+test: &test
   <<: *default
-  database: db/test.sqlite3
+  database: enjoy-vue_test
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  url: <%= ENV['DATABASE_URL'] %>
